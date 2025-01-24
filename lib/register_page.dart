@@ -5,36 +5,39 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 
-class Loginpage extends StatefulWidget {
+class RegisterPage extends StatefulWidget {
   final Function()? onTap;
- Loginpage({super.key, required this.onTap});
+  RegisterPage({super.key,required this.onTap});
 
   @override
-  State<Loginpage> createState() => _LoginpageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginpageState extends State<Loginpage> {
+class _RegisterPageState extends State<RegisterPage> {
   void signin() async {
 
-   showDialog(context: context, builder: (context){
-     return Center(
-       child: CircularProgressIndicator(),
-     );
-   });
+    showDialog(context: context, builder: (context){
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    });
 
-   try{
-     await FirebaseAuth.instance.signInWithEmailAndPassword(
-       email: usernameController.text,
-       password: passwordController.text,
-     );
-     Navigator.pop(context);
-   } on FirebaseAuthException catch(e){
-     if(e.code == 'user-not-found'){
-       wrongEmailMessage();
-     } else if (e.code == 'wrong-password'){
-       wrongPassword();
-     }
-   }
+    try{
+      if(passwordController.text == confirmpass.text){
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: usernameController.text,
+          password: passwordController.text,
+        );
+      }
+
+      Navigator.pop(context);
+    } on FirebaseAuthException catch(e){
+      if(e.code == 'user-not-found'){
+        wrongEmailMessage();
+      } else if (e.code == 'wrong-password'){
+        wrongPassword();
+      }
+    }
 
 
     Navigator.pop(context);
@@ -60,8 +63,8 @@ class _LoginpageState extends State<Loginpage> {
 
 
   final usernameController = TextEditingController();
-
   final passwordController = TextEditingController();
+  final confirmpass = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -73,13 +76,13 @@ class _LoginpageState extends State<Loginpage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-               const SizedBox(height: 50,),
+                const SizedBox(height: 40,),
                 const Icon(Icons.lock,
-                size: 100,),
+                  size: 100,),
 
                 const SizedBox(height: 50,),
-                Text('Welcome back you\'ve been missed!',
-                style: TextStyle(color: Colors.grey[700],fontSize: 16) ,),
+                Text('Let\'s start a new journey',
+                  style: TextStyle(color: Colors.grey[700],fontSize: 16) ,),
 
                 const SizedBox(height: 25,),
                 MyTextfield(controller: usernameController,hintText: 'Username', obsecureText: false,),
@@ -88,32 +91,23 @@ class _LoginpageState extends State<Loginpage> {
                 MyTextfield(controller: passwordController,hintText: 'Password',obsecureText: true,),
 
                 SizedBox(height: 10,),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text('Forgot Password?',
-                      style: TextStyle(color: Colors.grey[600]),
-                      ),
-                    ],
-                  ),
-                ),
+                MyTextfield(controller: confirmpass,hintText: 'Confirm Password',obsecureText: true,),
+
 
                 SizedBox(height: 10,),
-                MyButton(text: "Sign In" ,onTap: signin,),
+                MyButton(text: "Sign Up",onTap: signin,),
 
-                SizedBox(height: 50,),
+                SizedBox(height: 40,),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
                   child: Row(
                     children: [
                       Expanded(
-                      child: Divider(
-                        thickness: 0.5,
-                        color: Colors.grey[500],
+                        child: Divider(
+                          thickness: 0.5,
+                          color: Colors.grey[500],
+                        ),
                       ),
-                    ),
                       Text('Or continue with',style: TextStyle(color: Colors.grey[700]),),
                       Expanded(
                         child: Divider(
@@ -124,7 +118,7 @@ class _LoginpageState extends State<Loginpage> {
                     ],
                   ),
                 ),
-                SizedBox(height: 50,),
+                SizedBox(height: 40,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -135,19 +129,22 @@ class _LoginpageState extends State<Loginpage> {
                   ],
                 ),
 
-                SizedBox(height: 50,),
+                SizedBox(height: 40,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('Not a member?',
-                    style: TextStyle(color: Colors.grey[700]),
+                    Text('Already have an account?',
+                      style: TextStyle(color: Colors.grey[700]),
                     ),
                     SizedBox(width: 4,),
                     GestureDetector(
                       onTap: widget.onTap,
-                      child: Text('Register Now',style: TextStyle(
-                        color: Colors.blue,fontWeight: FontWeight.bold,
-                      ),),
+                      child: Text('Login Now',
+                      style: TextStyle(
+                      color: Colors.blue,
+                      fontWeight: FontWeight.bold
+                      ),
+                      ),
                     )
                   ],
                 )

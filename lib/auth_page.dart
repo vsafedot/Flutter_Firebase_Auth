@@ -1,4 +1,5 @@
 import 'package:blbla/loginpage.dart';
+import 'package:blbla/signup_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,7 @@ class AuthPage extends StatelessWidget {
               return HomePage();
             }
             else{
-              return Loginpage();
+              return SignupPage();
             }
           }),
     );
